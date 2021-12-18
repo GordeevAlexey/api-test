@@ -1,6 +1,5 @@
 from DataBase.db_context import DBContext
 from fastapi import FastAPI, Request
-from typing import Optional
 import datetime
 
 app = FastAPI()
