@@ -2,8 +2,26 @@ version: '3'
 services:
   core_api:
     build: .
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app:app --host 0.0.0.0 --port=15400'
     container_name: "core-api-container"
     ports:
       - "8000:15400"
     volumes:
       - ./app/:/app
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=admin
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+#      - ./.database/postgres/data:/var/lib/postgresql/data
+      - ./DataBase/create_fixtures.sql:/docker-entrypoint-initdb.d/create_fixtures.sql
+    environment:
+      - POSTGRES_DB=api_log
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - "5432:5432"
