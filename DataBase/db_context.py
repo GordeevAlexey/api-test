@@ -9,8 +9,8 @@ psycopg2.extras.register_uuid()
 class DBContext:
 
     def __init__(self):
-        #self.conn = psycopg2.connect(user='postgres', dbname='api_log', password='admin', host='db', port='5432')
-        self.conn = psycopg2.connect(user='postgres', dbname='api_log', password='admin', host='192.168.1.188', port='5432')
+        self.conn = psycopg2.connect(user='postgres', dbname='api_log', password='admin', host='db', port='5432')
+        #self.conn = psycopg2.connect(user='postgres', dbname='api_log', password='admin', host='192.168.1.188', port='5432')
         self.cursor = self.conn.cursor()
         self.conn.commit()
 
