@@ -1,9 +1,13 @@
 from DataBase.db_context import DBContext
 from fastapi import FastAPI, Request
+import pytz
 import datetime
+import uuid
+import json
 
 app = FastAPI()
 db = DBContext()
+tz_moscow = pytz.timezone('Europe/Moscow')
 
 @app.get("/alllogsservice")
 async def get_all_logs_service(service_name: str):
@@ -102,10 +106,10 @@ async def add_log_bd(log: str, request: Request, srv: str = "no named service"):
     Если указанного сервиса не существует в БД, динамичсески дополняет БД указанным сервисом.\n
 
     """
-
+    log = json.dumps(log)
     client_ip = request.client.host
-    dt_now = datetime.datetime.now()
+    dt_now = str(datetime.datetime.now(tz_moscow))
     id_service = db.return_id_with_addition(srv)[0]
-    addList = [id_service, dt_now, log, client_ip]
+    addList = [uuid.uuid4(), id_service, dt_now, log, client_ip]
     db.insert_log_in_bd(addList)
     return {'Logs added to the database'}
